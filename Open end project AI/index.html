@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XR PhysicsLab — Immersive Virtual Physics Laboratory</title>
+  <meta name="description" content="An immersive XR-based virtual physics laboratory for interactive mechanics, optics, circuits, and wave experiments. Built for modern education." />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════ LOADING SCREEN ═══════════════════ -->
+  <div id="loading-screen">
+    <div class="loader-content">
+      <div class="loader-logo">
+        <div class="logo-ring ring-1"></div>
+        <div class="logo-ring ring-2"></div>
+        <div class="logo-ring ring-3"></div>
+        <span class="logo-icon">⚛</span>
+      </div>
+      <h1 class="loader-title">XR PhysicsLab</h1>
+      <p class="loader-sub">Initializing Immersive Environment...</p>
+      <div class="loader-bar-wrap"><div class="loader-bar" id="loader-bar"></div></div>
+      <p class="loader-pct" id="loader-pct">0%</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ LANDING PAGE ═══════════════════ -->
+  <div id="landing-page" class="hidden">
+    <!-- Starfield canvas -->
+    <canvas id="stars-canvas"></canvas>
+
+    <!-- Floating particles -->
+    <div class="particles-wrap" id="particles-wrap"></div>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+      <div class="nav-logo">
+        <span class="nav-icon">⚛</span>
+        <span class="nav-title">XR PhysicsLab</span>
+      </div>
+      <div class="nav-pills">
+        <span class="nav-pill active">Laboratory</span>
+        <span class="nav-pill" onclick="showSection('about')">About</span>
+        <span class="nav-pill" onclick="showSection('progress')">Progress</span>
+      </div>
+      <div class="nav-badge">
+        <span class="badge-dot"></span>
+        <span>XR Ready</span>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-badge">🔬 Virtual Reality · Augmented Reality · Extended Reality</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="title-glow">Immersive</span><br/>
+        Virtual Physics<br/>
+        <span class="title-accent">Laboratory</span>
+      </h1>
+      <p class="hero-desc">
+        Conduct real physics experiments in a fully interactive 3D environment.<br/>
+        Explore mechanics, optics, electricity, and waves — all without a lab.
+      </p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="enterLab()">
+          <span class="btn-icon">▶</span> Enter Lab
+        </button>
+        <button class="btn-secondary" onclick="showSection('about')">Learn More</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">5</span><span class="stat-lbl">Experiments</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">3D</span><span class="stat-lbl">Interactive</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">XR</span><span class="stat-lbl">Ready</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">∞</span><span class="stat-lbl">Simulations</span></div>
+      </div>
+    </section>
+
+    <!-- Experiment Cards -->
+    <section class="experiments-section" id="experiments-section">
+      <h2 class="section-title">Choose Your Experiment</h2>
+      <p class="section-sub">Select an experiment below to enter the interactive 3D simulation</p>
+      <div class="cards-grid">
+
+        <div class="exp-card" onclick="launchExperiment('projectile')" data-exp="projectile">
+          <div class="card-glow"></div>
+          <div class="card-icon">🚀</div>
+          <div class="card-badge">Mechanics</div>
+          <h3>Projectile Motion</h3>
+          <p>Launch objects at varying angles and velocities. Visualize parabolic trajectories with real-time data.</p>
+          <div class="card-tags">
+            <span>Velocity</span><span>Gravity</span><span>Trajectory</span>
+          </div>
+          <div class="card-enter">Enter →</div>
+        </div>
+
+        <div class="exp-card" onclick="launchExperiment('pendulum')" data-exp="pendulum">
+          <div class="card-glow"></div>
+          <div class="card-icon">🕰️</div>
+          <div class="card-badge">Oscillation</div>
+          <h3>Simple Pendulum</h3>
+          <p>Explore simple harmonic motion. Adjust length and gravity to observe period relationships.</p>
+          <div class="card-tags">
+            <span>Period</span><span>SHM</span><span>Energy</span>
+          </div>
+          <div class="card-enter">Enter →</div>
+        </div>
+
+        <div class="exp-card" onclick="launchExperiment('optics')" data-exp="optics">
+          <div class="card-glow"></div>
+          <div class="card-icon">🔭</div>
+          <div class="card-badge">Optics</div>
+          <h3>Ray Optics</h3>
+          <p>Trace light rays through lenses and mirrors. Visualize reflection, refraction, and focal points.</p>
+          <div class="card-tags">
+            <span>Refraction</span><span>Lenses</span><span>Snell's Law</span>
+          </div>
+          <div class="card-enter">Enter →</div>
+        </div>
+
+        <div class="exp-card" onclick="launchExperiment('circuits')" data-exp="circuits">
+          <div class="card-glow"></div>
+          <div class="card-icon">⚡</div>
+          <div class="card-badge">Electricity</div>
+          <h3>Electric Circuits</h3>
+          <p>Build series and parallel circuits. Measure voltage, current, and resistance with virtual instruments.</p>
+          <div class="card-tags">
+            <span>Ohm's Law</span><span>Current</span><span>Resistance</span>
+          </div>
+          <div class="card-enter">Enter →</div>
+        </div>
+
+        <div class="exp-card" onclick="launchExperiment('waves')" data-exp="waves">
+          <div class="card-glow"></div>
+          <div class="card-icon">🌊</div>
+          <div class="card-badge">Waves</div>
+          <h3>Wave Interference</h3>
+          <p>Observe constructive and destructive interference patterns with adjustable frequency sources.</p>
+          <div class="card-tags">
+            <span>Frequency</span><span>Amplitude</span><span>Superposition</span>
+          </div>
+          <div class="card-enter">Enter →</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section hidden" id="about-section">
+      <div class="about-grid">
+        <div class="about-text">
+          <h2>What is XR PhysicsLab?</h2>
+          <p>XR PhysicsLab is an immersive, browser-based educational platform that simulates a Virtual Reality Physics Laboratory. Using <strong>Three.js</strong> for 3D rendering and real-time physics calculations, students can conduct experiments that are difficult, dangerous, or expensive in a real lab.</p>
+          <ul class="about-list">
+            <li>🎮 Real-time 3D physics simulation</li>
+            <li>🔬 5 complete experiment modules</li>
+            <li>📊 Live data graphs and readings</li>
+            <li>🧪 Interactive equipment manipulation</li>
+            <li>📝 Built-in quizzes and assessments</li>
+            <li>🌐 WebXR-ready architecture</li>
+          </ul>
+          <h3>Computer Graphics Techniques Used</h3>
+          <div class="tech-chips">
+            <span>3D Modelling</span><span>Transformations</span><span>Camera Controls</span>
+            <span>Lighting & Shading</span><span>Textures & Materials</span>
+            <span>Animation</span><span>Particle Systems</span><span>Physics Simulation</span>
+          </div>
+        </div>
+        <div class="about-visual">
+          <div class="cg-wheel">
+            <div class="cg-item" style="--i:0">3D Models</div>
+            <div class="cg-item" style="--i:1">Lighting</div>
+            <div class="cg-item" style="--i:2">Shading</div>
+            <div class="cg-item" style="--i:3">Textures</div>
+            <div class="cg-item" style="--i:4">Animation</div>
+            <div class="cg-item" style="--i:5">Physics</div>
+            <div class="cg-center">CG</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="showSection('lab')" style="margin:2rem auto;display:block;width:fit-content;">Back to Lab →</button>
+    </section>
+
+    <!-- Progress Section -->
+    <section class="progress-section hidden" id="progress-section">
+      <h2 class="section-title">Your Progress</h2>
+      <div class="progress-grid" id="progress-grid">
+        <!-- filled by JS -->
+      </div>
+      <div class="score-total">
+        <span>Total Score: </span>
+        <span id="total-score-display" class="score-num">0</span>
+        <span> / 500</span>
+      </div>
+      <button class="btn-secondary" onclick="showSection('lab')" style="margin:1rem auto;display:block;width:fit-content;">← Back to Lab</button>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>XR PhysicsLab · Computer Graphics Educational Project · AR/VR/XR for Learning</p>
+      <p class="footer-tech">Built with Three.js · WebGL · Vanilla JS · CSS3</p>
+    </footer>
+  </div>
+
+  <!-- ═══════════════════ LAB ENVIRONMENT ═══════════════════ -->
+  <div id="lab-environment" class="hidden">
+
+    <!-- XR HUD Top Bar -->
+    <div class="xr-hud-top">
+      <button class="hud-btn" onclick="exitLab()">← Exit Lab</button>
+      <div class="hud-title" id="hud-title">Virtual Physics Laboratory</div>
+      <div class="hud-right">
+        <div class="hud-status">
+          <span class="status-dot"></span>
+          <span id="hud-status-text">Ready</span>
+        </div>
+        <button class="hud-btn vr-btn" id="vr-toggle-btn" onclick="toggleVRMode()">⬛ VR Mode</button>
+      </div>
+    </div>
+
+    <!-- Lab Content -->
+    <div class="lab-content" id="lab-content">
+      <!-- Experiment containers inserted here by JS -->
+    </div>
+
+    <!-- XR HUD Bottom Bar -->
+    <div class="xr-hud-bottom">
+      <div class="hud-bottom-info" id="hud-bottom-info">Use controls to interact with the simulation</div>
+      <div class="exp-quick-nav">
+        <button onclick="launchExperiment('projectile')" title="Projectile">🚀</button>
+        <button onclick="launchExperiment('pendulum')" title="Pendulum">🕰️</button>
+        <button onclick="launchExperiment('optics')" title="Optics">🔭</button>
+        <button onclick="launchExperiment('circuits')" title="Circuits">⚡</button>
+        <button onclick="launchExperiment('waves')" title="Waves">🌊</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════ QUIZ MODAL ═══════════════════ -->
+  <div id="quiz-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeQuiz()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="quiz-title">Quiz: Projectile Motion</h2>
+        <button class="modal-close" onclick="closeQuiz()">✕</button>
+      </div>
+      <div class="modal-body" id="quiz-body">
+        <!-- quiz questions inserted by JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeQuiz()">Skip</button>
+        <button class="btn-primary" id="quiz-submit-btn" onclick="submitQuiz()">Submit Answers</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ RESULT MODAL ═══════════════════ -->
+  <div id="result-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeResult()"></div>
+    <div class="modal-content modal-result">
+      <div class="result-icon" id="result-icon">🎉</div>
+      <h2 id="result-title">Experiment Complete!</h2>
+      <p id="result-desc">Great work!</p>
+      <div class="result-score">
+        Score: <span id="result-score">0</span> / 100
+      </div>
+      <div class="result-stars" id="result-stars"></div>
+      <button class="btn-primary" onclick="closeResult()">Continue</button>
+    </div>
+  </div>
+
+  <!-- Main JS -->
+  <script src="js/main.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/physics.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/experiments/projectile.js"></script>
+  <script src="js/experiments/pendulum.js"></script>
+  <script src="js/experiments/optics.js"></script>
+  <script src="js/experiments/circuits.js"></script>
+  <script src="js/experiments/waves.js"></script>
+  <script src="js/lab.js"></script>
+</body>
+</html>
